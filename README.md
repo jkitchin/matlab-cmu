@@ -42,7 +42,7 @@ Now, make sure to add the directory formed in 1 or 2 to your Matlab path.
 Example usage
 =============
 
-[See this html](+cmu/examples/html/unit_tutorials.html)
+[See this m-file](https://github.com/johnkitchin/matlab-cmu/blob/master/%2Bcmu/examples/unit_tutorials.m)
 
 Some gotchas
 ============
