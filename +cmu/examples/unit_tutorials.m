@@ -94,9 +94,9 @@ sin(a/u.mol)
 
 %% Alternative base units
 % you can specify 'SI', 'CGS' or 'American' as the base units
-% SI/MKS: {'m','s','kg', 'K', 'mol','coul'}
-% CGS: {'cm','s','gm','K', 'mol','coul'}
-% American: {'in','s','lb','R', 'mol','coul'
+% SI/MKS: {'m','s','kg', 'K', 'mol','coul','candela'}
+% CGS: {'cm','s','gm','K', 'mol','coul','candela'}
+% American: {'in','s','lb','R', 'mol','coul','candela'}
 
 u = cmu.units('American');
 a = 2*u.ft
@@ -105,7 +105,7 @@ a.as(u.m)
 % you can also specify which units are your base. Note the order of base
 % units must be: length, time, mass, temperature, charge, mol
 % and all of them must be specified.
-u = cmu.unit.units('mm','min','ton','R','coul','mol');
+u = cmu.units('mm','min','ton','R','coul','mol','candela');
 a = u.cm
 a.as(u.m)
 
