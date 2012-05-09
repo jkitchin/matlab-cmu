@@ -1,7 +1,6 @@
 matlab-cmu
 ==========
 
-
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -21,7 +20,8 @@ Repository for the +cmu matlab package. this package contains a units class that
 1. Automatic unit conversion to a set of user-defined units (default is SI).
 2. Automatic unit algebra, e.g. kg*kg = kg^2, kg + m is not allowed.
 3. Many overloaded Matlab functions so that units work in ode solvers, linear algebra, nonlinear algebra, etc...
-4. Small library of commonly used units
+4. Defined functions where units are not allowed, e.g. trigonemetric functions, log, exp...
+5. Small library of commonly used units
 
 INSTALLATION
 ============
@@ -43,3 +43,14 @@ Example usage
 =============
 
 [See this html](+cmu/examples/html/unit_tutorials.html)
+
+Some gotchas
+============
+
+Not every function in Matlab is overloaded to use units. That means some functions may silently drop the units, and leave you with a plain number. I do not know a solution to that problem. Some functions will not work with units, e.g. det, eig, and others. I haven't implemented those yet.
+
+Mixed algebra with dimensionless numbers and units. There are times where it is essential to tell matlab a number is dimensionless, e.g. 0.5*u.dimensionless. This is necessary so that the appropriate overloaded function is selected.
+
+units can make Matlab very slow! In the simple cases, using units is nearly as fast as not using them. However, if you have vectors or matrices with mixed units, any linear algebra will be slow because it is coded in the units package through loops.
+
+units are just not defined for some operations, e.g. an LU decomposition. you will have to figure out what you mean and how to use units in cases like that.
