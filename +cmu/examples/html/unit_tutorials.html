@@ -1,0 +1,312 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>unit_tutorials</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-05-09"><meta name="DC.source" content="unit_tutorials.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Using cmu.units in Matlab</a></li><li><a href="#2">Load the units package</a></li><li><a href="#3">Simple unit algebra</a></li><li><a href="#4">Temperature is a little special</a></li><li><a href="#5">displaying units</a></li><li><a href="#6">Load the cmu.constants package</a></li><li><a href="#7">Arrays of units</a></li><li><a href="#8">units with Matlab functions</a></li><li><a href="#9">functions that do not work with units</a></li><li><a href="#10">Alternative base units</a></li><li><a href="#11">simplified units</a></li></ul></div><h2>Using cmu.units in Matlab<a name="1"></a></h2><p>John Kitchin</p><pre class="codeinput">clear <span class="string">all</span>; clc; close <span class="string">all</span>;
+</pre><h2>Load the units package<a name="2"></a></h2><p>units is a new type of object in Matlab that stores the units, enforces proper unit algebra and works with most mathematical operations in Matlab. You load the units package into a variable; by convention: u the default set of base units are the SI units.</p><pre class="codeinput">u = cmu.units;
+</pre><h2>Simple unit algebra<a name="3"></a></h2><p>the basics of unit algebra are that like units can be added and subtracted. Unlike units can be multiplied and divided. when you assign a unit to a number, it is automatically converted into the base units.</p><pre class="codeinput">5*u.kg <span class="comment">% a mass</span>
+5*u.lb <span class="comment">% another mass</span>
+6*u.m/u.s  <span class="comment">% a velocity</span>
+
+1*u.m + 10*u.cm <span class="comment">% this is ok, 1.1 m</span>
+<span class="comment">% 1*u.m + 1*u.s  % this is not ok</span>
+</pre><pre class="codeoutput">5*kg
+2.26796*kg
+6*m/s
+1.1*m
+</pre><h2>Temperature is a little special<a name="4"></a></h2><p>most unit conversions are simple multiplications. Temperature conversions involve multiplication and an offset; e.g. F = C*9/5 + 32;</p><pre class="codeinput">T = 298*u.K    <span class="comment">% Kelvin is an absolute scale</span>
+Tf = 400*u.R   <span class="comment">% Rankine is an absolute scale</span>
+T1 = u.degC(100) <span class="comment">% this is 100 degC, and T1 is in Kelvin</span>
+T2 = u.degF(212) <span class="comment">% this is 212 degF, and T2 is in Kelvin</span>
+
+<span class="comment">% convert 32 degF to degC</span>
+u.degF2C(32)  <span class="comment">%no units on the output</span>
+u.degC2F(100) <span class="comment">%no units on the output</span>
+</pre><pre class="codeoutput">298*K
+222.222*K
+373.15*K
+373.15*K
+
+ans =
+
+     0
+
+
+ans =
+
+   212
+
+</pre><h2>displaying units<a name="5"></a></h2><p>a unit object has an "as" function that can display the unit in various forms</p><pre class="codeinput">a = 1*u.kg;
+a.as(u.lb)
+
+<span class="comment">% to do an actual conversion, you divide the unit by the units you want to</span>
+<span class="comment">% convert to.</span>
+sprintf(<span class="string">'%1.2f = %1.2f lb'</span>,a,a/u.lb)
+</pre><pre class="codeoutput">2.205*lb
+
+ans =
+
+1.00*kg = 2.20 lb
+
+</pre><h2>Load the cmu.constants package<a name="6"></a></h2><p>The gas constant, speed of light, etc... are stored in this package</p><pre class="codeinput">clear <span class="string">all</span>; u = cmu.units;
+c = cmu.constants;
+c.R  <span class="comment">%the gas constant%% variations of the gas constant</span>
+c.R.as(u.J/u.mol/u.K)
+c.R.as(u.J/(u.mol*u.K))
+c.R.as(u.cal/u.mol/u.K)
+c.R.as(u.dm^3*u.atm/u.mol/u.K)
+c.R.as(u.BTU/u.lbmol/u.R)
+c.R.as(u.ft^3*u.atm/(u.lbmol*u.R))
+</pre><pre class="codeoutput">8.31447*m^2/s^2*kg/K/mol
+8.314*J/mol/K
+8.314*J/(mol*K)
+1.986*cal/mol/K
+0.082*dm^3*atm/mol/K
+1.986*BTU/lbmol/R
+0.730*ft^3*atm/(lbmol*R)
+</pre><h2>Arrays of units<a name="7"></a></h2><pre class="codeinput">t = [0 1 2 3 4]*u.s;
+C = [5 3 1 0.5 0.05]*u.mol/u.L; <span class="comment">% note these concentrations are stored</span>
+                                <span class="comment">% internally as mol/m^3 because those are</span>
+                                <span class="comment">% the base SI units</span>
+
+<span class="comment">% we can change the units in a plot by converting them to the units we want</span>
+plot(t/u.min,C/(u.mol/u.L))
+xlabel(<span class="string">'Time (min)'</span>)
+ylabel(<span class="string">'Concentration (mol/L)'</span>)
+</pre><img vspace="5" hspace="5" src="unit_tutorials_01.png" alt=""> <h2>units with Matlab functions<a name="8"></a></h2><p>Many functions in Matlab such as ode45, ode15s, fzero, fsolve, min, max, etc... work with units. This works because we have overloaded these functions to work with units. Not all functions are overloaded though, so be careful! If you find you have lost the units, it means you used a function that was not overloaded. Please let us know about it!</p><p>little example of integrating an ode</p><pre class="codeinput">k = 0.3/u.min;
+dCadt = @(t,Ca) -k*Ca;
+Cao = 1*u.mol/u.L;
+tspan = [0 10]*u.min;
+[t,Ca] = ode45(dCadt, tspan, Cao);
+plot(t,Ca/(u.mol/u.L),<span class="string">'ko-'</span>) <span class="comment">%default units for Ca are mol/m^3!</span>
+xlabel(<span class="string">'Time(sec)'</span>)
+ylabel(<span class="string">'Ca (mol/L)'</span>)
+</pre><img vspace="5" hspace="5" src="unit_tutorials_02.png" alt=""> <h2>functions that do not work with units<a name="9"></a></h2><p>functions that require dimensionless arguments (e.g. trig functions, exp, log, etc...) will usually fail if you pass a unit in. You must divide the arguments by the appropriate units to make them dimensionless</p><pre class="codeinput">a = 5*u.mol;
+sin(a/u.mol)
+</pre><pre class="codeoutput">
+ans =
+
+   -0.9589
+
+</pre><h2>Alternative base units<a name="10"></a></h2><p>you can specify 'SI', 'CGS' or 'American' as the base units SI/MKS: {'m','s','kg', 'K', 'mol','coul','candela'} CGS: {'cm','s','gm','K', 'mol','coul','candela'} American: {'in','s','lb','R', 'mol','coul','candela'}</p><pre class="codeinput">u = cmu.units(<span class="string">'American'</span>);
+a = 2*u.ft
+a.as(u.m)
+
+<span class="comment">% you can also specify which units are your base. Note the order of base</span>
+<span class="comment">% units must be: length, time, mass, temperature, charge, mol</span>
+<span class="comment">% and all of them must be specified.</span>
+u = cmu.units(<span class="string">'mm'</span>,<span class="string">'min'</span>,<span class="string">'ton'</span>,<span class="string">'R'</span>,<span class="string">'coul'</span>,<span class="string">'mol'</span>,<span class="string">'candela'</span>);
+a = u.cm
+a.as(u.m)
+</pre><pre class="codeoutput">24*in
+0.610*m
+10*mm
+0.010*m
+</pre><h2>simplified units<a name="11"></a></h2><p>there may be times when you need units conversion, but you only want simple numbers and not unit objects, e.g. because some Matlab function doesn't handle units. You can load the simple_units structure to get a set of conversion factors. Unit algebra is not used and units are kept track of, so you have to know what the units are.</p><pre class="codeinput">u = cmu.unit.simple_units;
+a = 1*u.kg
+a/u.lb
+a/u.min
+</pre><pre class="codeoutput">
+a =
+
+    0.0011
+
+
+ans =
+
+    2.2046
+
+
+ans =
+
+    0.0011
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Using cmu.units in Matlab
+% John Kitchin
+clear all; clc; close all;
+
+
+%% Load the units package
+% units is a new type of object in Matlab that stores the units, enforces 
+% proper unit algebra and works with most mathematical operations in 
+% Matlab. You load the units package into a variable; by convention: u
+% the default set of base units are the SI units.
+u = cmu.units;
+
+%% Simple unit algebra
+% the basics of unit algebra are that like units can be added and
+% subtracted. Unlike units can be multiplied and divided.
+% when you assign a unit to a number, it is automatically converted into
+% the base units. 
+5*u.kg % a mass
+5*u.lb % another mass
+6*u.m/u.s  % a velocity
+
+1*u.m + 10*u.cm % this is ok, 1.1 m
+% 1*u.m + 1*u.s  % this is not ok
+
+%% Temperature is a little special
+% most unit conversions are simple multiplications. Temperature conversions
+% involve multiplication and an offset; e.g. F = C*9/5 + 32;
+
+T = 298*u.K    % Kelvin is an absolute scale
+Tf = 400*u.R   % Rankine is an absolute scale
+T1 = u.degC(100) % this is 100 degC, and T1 is in Kelvin
+T2 = u.degF(212) % this is 212 degF, and T2 is in Kelvin
+
+% convert 32 degF to degC
+u.degF2C(32)  %no units on the output
+u.degC2F(100) %no units on the output
+
+%% displaying units 
+% a unit object has an "as" function that can display the unit in various
+% forms
+a = 1*u.kg;
+a.as(u.lb)
+
+% to do an actual conversion, you divide the unit by the units you want to
+% convert to.
+sprintf('%1.2f = %1.2f lb',a,a/u.lb)
+
+%% Load the cmu.constants package
+% The gas constant, speed of light, etc... are stored in this package
+clear all; u = cmu.units;
+c = cmu.constants;
+c.R  %the gas constant%% variations of the gas constant
+c.R.as(u.J/u.mol/u.K)
+c.R.as(u.J/(u.mol*u.K))
+c.R.as(u.cal/u.mol/u.K)
+c.R.as(u.dm^3*u.atm/u.mol/u.K)
+c.R.as(u.BTU/u.lbmol/u.R)
+c.R.as(u.ft^3*u.atm/(u.lbmol*u.R))
+
+%% Arrays of units
+t = [0 1 2 3 4]*u.s;
+C = [5 3 1 0.5 0.05]*u.mol/u.L; % note these concentrations are stored 
+                                % internally as mol/m^3 because those are 
+                                % the base SI units
+
+% we can change the units in a plot by converting them to the units we want
+plot(t/u.min,C/(u.mol/u.L))
+xlabel('Time (min)')
+ylabel('Concentration (mol/L)')
+
+%% units with Matlab functions
+% Many functions in Matlab such as ode45, ode15s, fzero, fsolve, min, max,
+% etc... work with units. This works because we have overloaded these 
+% functions to work with units. Not all functions are overloaded though, so
+% be careful! If you find you have lost the units, it means you used a
+% function that was not overloaded. Please let us know about it!
+%
+% little example of integrating an ode
+k = 0.3/u.min;
+dCadt = @(t,Ca) -k*Ca;
+Cao = 1*u.mol/u.L;
+tspan = [0 10]*u.min;
+[t,Ca] = ode45(dCadt, tspan, Cao);
+plot(t,Ca/(u.mol/u.L),'ko-') %default units for Ca are mol/m^3!
+xlabel('Time(sec)')
+ylabel('Ca (mol/L)')
+
+%% functions that do not work with units
+% functions that require dimensionless arguments (e.g. trig functions, exp,
+% log, etc...) will usually fail if you pass a unit in. You must divide the
+% arguments by the appropriate units to make them dimensionless
+a = 5*u.mol;
+sin(a/u.mol)
+
+%% Alternative base units
+% you can specify 'SI', 'CGS' or 'American' as the base units
+% SI/MKS: {'m','s','kg', 'K', 'mol','coul','candela'}
+% CGS: {'cm','s','gm','K', 'mol','coul','candela'}
+% American: {'in','s','lb','R', 'mol','coul','candela'}
+
+u = cmu.units('American');
+a = 2*u.ft
+a.as(u.m)
+
+% you can also specify which units are your base. Note the order of base
+% units must be: length, time, mass, temperature, charge, mol
+% and all of them must be specified.
+u = cmu.units('mm','min','ton','R','coul','mol','candela');
+a = u.cm
+a.as(u.m)
+
+%% simplified units
+% there may be times when you need units conversion, but you only want
+% simple numbers and not unit objects, e.g. because some Matlab function 
+% doesn't handle units.
+% You can load the simple_units structure to get a set of conversion
+% factors. Unit algebra is not used and units are kept track of, so you
+% have to know what the units are.
+u = cmu.unit.simple_units;
+a = 1*u.kg
+a/u.lb
+a/u.min
+
+
+##### SOURCE END #####
+--></body></html>
