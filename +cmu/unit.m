@@ -714,7 +714,7 @@ classdef (InferiorClasses = {?double}) unit < double
             elseif isempty(u2) && isa(u1,'cmu.unit')
                 exps = [u1.exponents];
             else
-                exps = [{[0 0 0 0 0 0 0]}];
+                exps = {[0 0 0 0 0 0 0]};
                 %error('horzcat is not defined for catenation of units and non-units')
             end
             
@@ -1762,6 +1762,7 @@ classdef (InferiorClasses = {?double}) unit < double
             end
             
             if nargout == 0
+                % no output, just print unit at command line
                 cmu.unit(X,e,ds)
             end
             
@@ -2396,7 +2397,7 @@ classdef (InferiorClasses = {?double}) unit < double
             u.kWh = 3.6e6*u.J;        
             u.cal = 4.1868*u.J;       
             u.kcal = 1e3*u.cal;       
-            u.erg = 1e-7*u.J
+            u.erg = 1e-7*u.J;
             
             %---- pressure -----
             u.Pa = u.N/u.m^2;
