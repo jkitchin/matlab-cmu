@@ -30,11 +30,11 @@ Get the code with one of these options.
 
 1. with git:
 
-        git clone git@github.com:johnkitchin/matlab-cmu.git
+        git clone git@github.com:jkitchin/matlab-cmu.git
 
 2. as a zip file:
 
-        wget -O matlab-cmu.zip https://github.com/johnkitchin/matlab-cmu/zipball/master
+        wget -O matlab-cmu.zip https://github.com/jkitchin/matlab-cmu/zipball/master
         unzip matlab-cmu.zip
 
 Now, make sure to add the directory formed in 1 or 2 to your Matlab path.
@@ -42,7 +42,7 @@ Now, make sure to add the directory formed in 1 or 2 to your Matlab path.
 Example usage
 =============
 
-[See this m-file](https://github.com/johnkitchin/matlab-cmu/blob/master/%2Bcmu/examples/unit_tutorials.m)
+[See this m-file](https://github.com/jkitchin/matlab-cmu/blob/master/%2Bcmu/examples/unit_tutorials.m)
 
 Some gotchas
 ============
